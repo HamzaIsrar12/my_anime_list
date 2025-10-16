@@ -3,7 +3,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from api.serializers import UserSerializer
+from accounts.serializers import UserSerializer
 
 
 class RegisterAPIView(GenericAPIView):
