@@ -7,3 +7,14 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class IntegerChoicesExtended(models.IntegerChoices):
+    @classmethod
+    def value_of(cls, label, default=None):
+        label = str(label).lower()
+        for (choice_value, choice_label) in cls.choices:
+            if label == choice_label.lower():
+                return choice_value
+
+        return default

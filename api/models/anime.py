@@ -1,15 +1,15 @@
 from django.db import models
 
 from api.models.common import Image
-from core.models import BaseModel
+from core.models import BaseModel, IntegerChoicesExtended
 
 
 class Anime(BaseModel):
-    class Season(models.TextChoices):
-        SPRING = 'spring'
-        SUMMER = 'summer'
-        FALL = 'fall'
-        WINTER = 'winter'
+    class Season(IntegerChoicesExtended):
+        SPRING = 0, 'Spring'
+        SUMMER = 1, 'Summer'
+        FALL = 2, 'Fall'
+        WINTER = 3, 'Winter'
 
     mal_id = models.PositiveIntegerField(unique=True)
     title = models.CharField(max_length=100)
@@ -17,7 +17,7 @@ class Anime(BaseModel):
     aired_from = models.DateField(blank=True, null=True)
     aired_till = models.DateField(blank=True, null=True)
     synopsis = models.TextField()
-    season = models.CharField(max_length=7, choices=Season.choices, blank=True, null=True)
+    season = models.IntegerField(choices=Season.choices, blank=True, null=True)
     images = models.ManyToManyField(Image, related_name='anime', blank=True)
     studios = models.ManyToManyField('Studio', related_name='anime')
     genres = models.ManyToManyField('Genre', related_name='anime')

@@ -3,19 +3,19 @@ from django.db import models
 from api.models import User
 from api.models.anime import Anime
 from api.models.common import Image
-from core.models import BaseModel
+from core.models import BaseModel, IntegerChoicesExtended
 
 
 class Character(models.Model):
-    class Role(models.TextChoices):
-        MAIN = 'Main'
-        SUPPORTING = 'Supporting'
+    class Role(IntegerChoicesExtended):
+        MAIN = 0, 'Main'
+        SUPPORTING = 1, 'Supporting'
 
     anime = models.ForeignKey(Anime, related_name='characters', on_delete=models.CASCADE)
     mal_id = models.PositiveIntegerField(unique=True)
     images = models.ManyToManyField(Image, related_name='characters', blank=True)
     name = models.CharField(max_length=50)
-    role = models.CharField(choices=Role.choices, max_length=10, default=Role.MAIN)
+    role = models.IntegerField(choices=Role.choices, default=Role.MAIN)
     liked_by = models.ManyToManyField(User, related_name='liked_characters', through='CharacterLike', blank=True)
 
     def __str__(self):

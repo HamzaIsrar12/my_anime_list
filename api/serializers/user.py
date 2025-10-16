@@ -24,14 +24,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 class WatchListSerializer(serializers.ModelSerializer):
     anime_id = serializers.PrimaryKeyRelatedField(source='anime', queryset=Anime.objects.all(), write_only=True)
-    anime_title = serializers.SerializerMethodField(read_only=True)
+    anime_title = serializers.StringRelatedField(source='anime.title', read_only=True)
+    type_label = serializers.CharField(source='get_type_display', read_only=True)
 
     class Meta:
         model = WatchList
-        fields = ['id', 'type', 'anime_id', 'anime_title', 'created_at']
-
-    def get_anime_title(self, obj) -> str:
-        return obj.anime.title
+        fields = ['id', 'type', 'type_label', 'anime_id', 'anime_title', 'created_at']
 
 
 class WatchListUpdateSerializer(serializers.ModelSerializer):

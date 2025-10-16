@@ -7,6 +7,8 @@ User = get_user_model()
 
 
 class ImageSerializer(serializers.ModelSerializer):
+    type_label = serializers.CharField(source='get_type_display', read_only=True)
+
     class Meta:
         model = Image
-        fields = ['type', 'image_url', 'small_image_url', 'large_image_url']
+        fields = ['type', 'type_label', 'image_url', 'small_image_url', 'large_image_url']

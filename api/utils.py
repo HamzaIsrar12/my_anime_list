@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 import requests
 
-BASE_URL = 'https://api.jikan.moe/v4/anime'
+from api.constants import BASE_URL
 
 
 def fetch_anime(path):

@@ -3,8 +3,7 @@ from django.db import transaction
 from django.utils.dateparse import parse_datetime
 from rest_framework import serializers
 
-from api.models import (Anime, Character, Episode, Genre, Image, Studio,
-                        VoiceActor)
+from api.models import Anime, Character, Episode, Genre, Image, Studio, VoiceActor
 from api.serializers.anime import GenreSerializer, StudioSerializer
 
 User = get_user_model()
@@ -28,7 +27,7 @@ class ImageExternalCreateSerializer(serializers.ModelSerializer):
 
         for image_type, urls in images_data.items():
             image, _ = Image.objects.update_or_create(
-                type=image_type,
+                type=Image.Type.value_of(image_type),
                 image_url=urls.get('image_url', None),
                 defaults={
                     'image_url': urls.get('image_url', None),
@@ -51,23 +50,12 @@ class AnimeExternalCreateSerializer(serializers.ModelSerializer):
     aired = serializers.DictField(write_only=True, allow_empty=True, required=False)
     studios = StudioSerializer(many=True, write_only=True, allow_empty=True, required=False)
     genres = GenreSerializer(many=True, write_only=True, allow_empty=True, required=False)
+    season = serializers.CharField(required=False)
 
     class Meta:
         model = Anime
-        fields = [
-            'mal_id',
-            'url',
-            'title',
-            'aired_from',
-            'aired_till',
-            'rating',
-            'synopsis',
-            'season',
-            'images',
-            'studios',
-            'genres',
-            'aired'
-        ]
+        fields = ['mal_id', 'url', 'title', 'aired_from', 'aired_till', 'rating', 'synopsis', 'season', 'images',
+                  'studios', 'genres', 'aired']
         extra_kwargs = {
             'mal_id': {'validators': []},
         }
@@ -79,6 +67,9 @@ class AnimeExternalCreateSerializer(serializers.ModelSerializer):
         genres_data = validated_data.pop('genres', [])
         images_data = validated_data.pop('images', {})
         aired_data = validated_data.pop('aired', {})
+        season_data = validated_data.pop('season')
+
+        validated_data['season'] = Anime.Season.value_of(season_data)
 
         defaults = {k: v for k, v in validated_data.items()}
 
@@ -119,12 +110,12 @@ class CharacterExternalCreateSerializer(serializers.ModelSerializer):
         allow_empty=True,
         required=False,
     )
-
     voice_actors = serializers.ListField(
         child=serializers.DictField(),
         write_only=True,
         allow_empty=True
     )
+    role = serializers.CharField()
 
     class Meta:
         model = Character
@@ -158,7 +149,7 @@ class CharacterExternalCreateSerializer(serializers.ModelSerializer):
             mal_id=mal_id,
             defaults={
                 'name': name,
-                'role': role,
+                'role': Character.Role.value_of(role, Character.Role.MAIN.value),
                 'anime': anime,
             }
         )

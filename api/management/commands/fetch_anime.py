@@ -13,8 +13,8 @@ class Command(BaseCommand):
     '''
 
     def add_arguments(self, parser):
-        parser.add_argument('--start', type=int, default=1)
-        parser.add_argument('--end', type=int, default=20)
+        parser.add_argument('--start', type=int, default=1, help='First anime ID to parse (inclusive).')
+        parser.add_argument('--end', type=int, default=20, help='Parse up to this anime ID (inclusive).')
 
     def handle(self, *args, **options):
         start = options['start']

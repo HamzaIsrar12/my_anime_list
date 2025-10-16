@@ -5,6 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from api.constants import PAGINATION_PAGE_SIZE
 from api.models import Character, CharacterLike
 from api.serializers import CharacterLikeSerializer, CharacterSerializer
 
@@ -14,7 +15,7 @@ class CharacterViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CharacterSerializer
     permission_classes = [AllowAny]
     pagination_class = PageNumberPagination
-    pagination_class.page_size = 20
+    pagination_class.page_size = PAGINATION_PAGE_SIZE
     search_fields = ['name']
     filter_backends = [filters.SearchFilter]
 
@@ -32,16 +33,13 @@ class CharacterViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CharacterLikeViewSet(
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    mixins.DestroyModelMixin,
-    viewsets.GenericViewSet,
+    mixins.ListModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet
 ):
     permission_classes = [IsAuthenticated]
     queryset = CharacterLike.objects.select_related('character').order_by('pk')
     serializer_class = CharacterLikeSerializer
     pagination_class = PageNumberPagination
-    pagination_class.page_size = 20
+    pagination_class.page_size = PAGINATION_PAGE_SIZE
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)

@@ -1,18 +1,18 @@
 from django.db import models
 
 from api.models import Anime, User
-from core.models import BaseModel
+from core.models import BaseModel, IntegerChoicesExtended
 
 
 class WatchList(BaseModel):
-    class ListType(models.TextChoices):
-        WATCH_LATER = 'watch_later'
-        WATCHING = 'watching'
-        WATCHED = 'watched'
+    class ListType(IntegerChoicesExtended):
+        WATCH_LATER = 0, 'watch_later'
+        WATCHING = 1, 'watching'
+        WATCHED = 2, 'watched'
 
     user = models.ForeignKey(User, related_name='watchlist_entries', on_delete=models.CASCADE)
     anime = models.ForeignKey(Anime, related_name='watchlist_entries', on_delete=models.CASCADE)
-    type = models.CharField(max_length=11, choices=ListType.choices)
+    type = models.IntegerField(choices=ListType.choices, default=ListType.WATCH_LATER)
 
     class Meta:
         constraints = [

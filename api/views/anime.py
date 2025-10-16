@@ -3,9 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+from api.constants import PAGINATION_PAGE_SIZE
 from api.models import Anime, Character
-from api.serializers import (AnimeRetrieveSerializer, AnimeSerializer,
-                             CharacterSerializer, EpisodeSerializer)
+from api.serializers import AnimeRetrieveSerializer, AnimeSerializer, CharacterSerializer, EpisodeSerializer
 from api.serializers.review import ReviewSerializer
 
 
@@ -16,7 +16,7 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ['title', 'genres__name']
     ordering_fields = ['title']
     pagination_class = PageNumberPagination
-    pagination_class.page_size = 20
+    pagination_class.page_size = PAGINATION_PAGE_SIZE
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
