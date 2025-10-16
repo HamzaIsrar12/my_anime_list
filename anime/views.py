@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from anime.models import Anime, Character
 from anime.serializers import AnimeRetrieveSerializer, AnimeSerializer, CharacterSerializer, EpisodeSerializer
-from api.constants import PAGINATION_PAGE_SIZE
+from core.constants import PAGINATION_PAGE_SIZE
 from engagement.serializers import ReviewSerializer
 
 

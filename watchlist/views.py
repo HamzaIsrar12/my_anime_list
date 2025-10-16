@@ -4,7 +4,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.constants import PAGINATION_PAGE_SIZE
+from core.constants import PAGINATION_PAGE_SIZE
 from watchlist.models import WatchList
 from watchlist.serializers import WatchListSerializer, WatchListUpdateSerializer
 

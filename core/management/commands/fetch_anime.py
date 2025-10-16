@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from api.tasks import fetch_anime
+from core.tasks import fetch_anime
 
 
 class Command(BaseCommand):

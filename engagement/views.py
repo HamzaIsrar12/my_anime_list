@@ -3,7 +3,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.constants import PAGINATION_PAGE_SIZE
+from core.constants import PAGINATION_PAGE_SIZE
 from engagement.models import Review, CharacterLike
 from engagement.permissions import ReviewPermission
 from engagement.serializers import ReviewSerializer, ReviewUpdateSerializer, CharacterLikeSerializer

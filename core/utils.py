@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 import requests
 
-from api.constants import BASE_URL
+from core.constants import BASE_URL
 
 
 def fetch_anime(path):
