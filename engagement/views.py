@@ -1,35 +1,26 @@
-from django.db.models import Count
-from rest_framework import filters, mixins, status, viewsets
-from rest_framework.decorators import action
+from rest_framework import viewsets, mixins, status
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.constants import PAGINATION_PAGE_SIZE
-from api.models import Character, CharacterLike
-from api.serializers import CharacterLikeSerializer, CharacterSerializer
+from engagement.models import Review, CharacterLike
+from engagement.permissions import ReviewPermission
+from engagement.serializers import ReviewSerializer, ReviewUpdateSerializer, CharacterLikeSerializer
 
 
-class CharacterViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Character.objects.prefetch_related('images', 'liked_by', 'voice_actors').order_by('pk')
-    serializer_class = CharacterSerializer
-    permission_classes = [AllowAny]
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [ReviewPermission]
     pagination_class = PageNumberPagination
     pagination_class.page_size = PAGINATION_PAGE_SIZE
-    search_fields = ['name']
-    filter_backends = [filters.SearchFilter]
 
-    @action(detail=False, methods=['get'], url_path='top')
-    def top_characters(self, request):
-        characters = self.get_queryset().annotate(total_likes=Count('liked_by', distinct=True)).order_by('-total_likes')
+    def get_serializer_class(self):
+        if self.action in ['update', 'partial_update']:
+            return ReviewUpdateSerializer
 
-        page = self.paginate_queryset(characters)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(characters, many=True)
-        return Response(serializer.data)
+        return super().get_serializer_class()
 
 
 class CharacterLikeViewSet(

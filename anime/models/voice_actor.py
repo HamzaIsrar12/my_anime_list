@@ -1,6 +1,6 @@
 from django.db import models
 
-from anime.models.character import Character
+from anime.models import Character
 from media.models import Image
 
 
