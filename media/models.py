@@ -1,14 +1,10 @@
 from django.db import models
 
-from core.models import IntegerChoicesExtended
+from media.choices import ImageType
 
 
 class Image(models.Model):
-    class Type(IntegerChoicesExtended):
-        JPG = 0, 'jpg'
-        WEBP = 1, 'webp'
-
-    type = models.IntegerField(choices=Type.choices, default=Type.JPG)
+    type = models.IntegerField(choices=ImageType.choices, default=ImageType.JPG)
     image_url = models.URLField(blank=True, null=True)
     small_image_url = models.URLField(blank=True, null=True)
     large_image_url = models.URLField(blank=True, null=True)

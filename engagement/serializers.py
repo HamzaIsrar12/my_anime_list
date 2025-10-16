@@ -2,14 +2,14 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from anime.models import Anime, Character
-from engagement.models import Review, CharacterLike
+from engagement.models import CharacterLike, Review
 
 User = get_user_model()
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     anime_id = serializers.PrimaryKeyRelatedField(queryset=Anime.objects.all(), source='anime')
-    user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='user')
+    user_id = serializers.PrimaryKeyRelatedField(source='user', read_only=True)
 
     class Meta:
         model = Review

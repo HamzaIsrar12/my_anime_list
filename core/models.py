@@ -9,7 +9,7 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class IntegerChoicesExtended(models.IntegerChoices):
+class LabelLookupIntegerChoices(models.IntegerChoices):
     @classmethod
     def value_of(cls, label, default=None):
         label = str(label).lower()

@@ -4,8 +4,6 @@ from celery import chain, group, shared_task
 from celery.exceptions import Ignore
 from celery.utils.log import get_task_logger
 
-from api.models import Anime
-
 logger = get_task_logger(__name__)
 
 
@@ -26,8 +24,8 @@ def fetch_anime(start=1, end=20):
     rate_limit='20/m',
 )
 def process_and_store_anime(anime_id: int):
-    from api.serializers import AnimeExternalCreateSerializer
-    from api.utils import fetch_anime
+    from core.serializers import AnimeExternalCreateSerializer
+    from core.utils import fetch_anime
 
     payload, status = fetch_anime(anime_id)
 
@@ -55,8 +53,9 @@ def process_and_store_anime(anime_id: int):
     rate_limit='15/m',
 )
 def process_and_store_characters(anime_id):
-    from api.serializers import CharacterExternalCreateSerializer
-    from api.utils import fetch_anime
+    from anime.models import Anime
+    from core.serializers import CharacterExternalCreateSerializer
+    from core.utils import fetch_anime
 
     anime = Anime.objects.get(pk=anime_id)
     payload, status = fetch_anime(f'{anime.mal_id}/characters/')
@@ -83,8 +82,9 @@ def process_and_store_characters(anime_id):
     rate_limit='15/m',
 )
 def process_and_store_episodes(anime_id):
-    from api.serializers import EpisodeExternalCreateSerializer
-    from api.utils import fetch_anime
+    from anime.models import Anime
+    from core.serializers import EpisodeExternalCreateSerializer
+    from core.utils import fetch_anime
 
     anime = Anime.objects.get(pk=anime_id)
     payload, status = fetch_anime(f'{anime.mal_id}/episodes/')

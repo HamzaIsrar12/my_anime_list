@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from engagement.models import Review, CharacterLike
+from engagement.models import CharacterLike, Review
 
 admin.site.register(Review)
 admin.site.register(CharacterLike)

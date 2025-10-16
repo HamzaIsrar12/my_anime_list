@@ -39,18 +39,22 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'django_filters',
-    'drf_spectacular',
 ]
 
 THIRD_PARTY_APPS = [
+    'rest_framework',
+    'django_filters',
+    'drf_spectacular',
     'silk',
 ]
 
 MY_APPS = [
     'core',
-    'api',
+    'accounts',
+    'anime',
+    'media',
+    'engagement',
+    'watchlist',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
@@ -140,7 +144,7 @@ STATIC_ROOT = BASE_DIR / "static"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL = 'api.User'
+AUTH_USER_MODEL = 'accounts.User'
 
 SILKY_PYTHON_PROFILER = True
 

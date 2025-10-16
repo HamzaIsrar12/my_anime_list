@@ -1,12 +1,12 @@
-from rest_framework import viewsets, mixins, status
+from rest_framework import mixins, status, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from core.constants import PAGINATION_PAGE_SIZE
-from engagement.models import Review, CharacterLike
+from engagement.models import CharacterLike, Review
 from engagement.permissions import ReviewPermission
-from engagement.serializers import ReviewSerializer, ReviewUpdateSerializer, CharacterLikeSerializer
+from engagement.serializers import CharacterLikeSerializer, ReviewSerializer, ReviewUpdateSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -21,6 +21,9 @@ class ReviewViewSet(viewsets.ModelViewSet):
             return ReviewUpdateSerializer
 
         return super().get_serializer_class()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class CharacterLikeViewSet(
