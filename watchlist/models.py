@@ -1,7 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
-from api.models import Anime, User
+from anime.models import Anime
 from core.models import BaseModel, IntegerChoicesExtended
+
+User = get_user_model()
 
 
 class WatchList(BaseModel):

@@ -1,13 +1,12 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status, viewsets
+from rest_framework import viewsets, filters, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.constants import PAGINATION_PAGE_SIZE
-from api.models import WatchList
-from api.serializers import WatchListSerializer
-from api.serializers.user import WatchListUpdateSerializer
+from watchlist.models import WatchList
+from watchlist.serializers import WatchListSerializer, WatchListUpdateSerializer
 
 
 class WatchListViewSet(viewsets.ModelViewSet):
