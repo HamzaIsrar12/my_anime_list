@@ -1,35 +1,9 @@
-from django.contrib.auth import get_user_model
-from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
-from api.models import Anime, Episode, Genre, Studio
-from api.serializers.common import ImageSerializer
-
-User = get_user_model()
-
-
-class GenreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Genre
-        fields = ['id', 'mal_id', 'name', 'url']
-        extra_kwargs = {
-            'mal_id': {'validators': []},
-        }
-
-
-class StudioSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Studio
-        fields = ['id', 'mal_id', 'name', 'url']
-        extra_kwargs = {
-            'mal_id': {'validators': []},
-        }
-
-
-class EpisodeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Episode
-        fields = ['id', 'title', 'title_japanese', 'aired', 'filler', 'recap']
+from anime.models import Anime
+from anime.serializers.genre import GenreSerializer
+from anime.serializers.studio import StudioSerializer
+from media.serializers import ImageSerializer
 
 
 class AnimeSerializer(serializers.ModelSerializer):

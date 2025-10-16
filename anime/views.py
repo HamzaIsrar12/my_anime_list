@@ -1,11 +1,13 @@
+from django.db.models import Count
 from rest_framework import filters, viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from anime.models import Anime, Character
+from anime.serializers import AnimeRetrieveSerializer, AnimeSerializer, CharacterSerializer, EpisodeSerializer
 from api.constants import PAGINATION_PAGE_SIZE
-from api.models import Anime, Character
-from api.serializers import AnimeRetrieveSerializer, AnimeSerializer, CharacterSerializer, EpisodeSerializer
 from api.serializers.review import ReviewSerializer
 
 
@@ -62,4 +64,26 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
             return self.get_paginated_response(serializer.data)
 
         serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+
+
+class CharacterViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Character.objects.prefetch_related('images', 'liked_by', 'voice_actors').order_by('pk')
+    serializer_class = CharacterSerializer
+    permission_classes = [AllowAny]
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = PAGINATION_PAGE_SIZE
+    search_fields = ['name']
+    filter_backends = [filters.SearchFilter]
+
+    @action(detail=False, methods=['get'], url_path='top')
+    def top_characters(self, request):
+        characters = self.get_queryset().annotate(total_likes=Count('liked_by', distinct=True)).order_by('-total_likes')
+
+        page = self.paginate_queryset(characters)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(characters, many=True)
         return Response(serializer.data)
