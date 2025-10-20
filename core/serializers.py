@@ -57,8 +57,10 @@ class AnimeExternalCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Anime
-        fields = ['mal_id', 'url', 'title', 'aired_from', 'aired_till', 'rating', 'synopsis', 'season', 'images',
-                  'studios', 'genres', 'aired']
+        fields = [
+            'mal_id', 'url', 'title', 'aired_from', 'aired_till', 'rating', 'synopsis', 'season', 'images', 'studios',
+            'genres', 'aired'
+        ]
         extra_kwargs = {
             'mal_id': {'validators': []},
         }

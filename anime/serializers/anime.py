@@ -11,8 +11,9 @@ class AnimeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Anime
-        fields = ['id', 'mal_id', 'title', 'url', 'aired_from', 'aired_till', 'season', 'season_label', 'synopsis',
-                  'rating']
+        fields = [
+            'id', 'mal_id', 'title', 'url', 'aired_from', 'aired_till', 'season', 'season_label', 'synopsis', 'rating'
+        ]
         extra_kwargs = {
             'mal_id': {'validators': []},
         }
@@ -28,9 +29,10 @@ class AnimeRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Anime
-        fields = ['id', 'mal_id', 'title', 'url', 'aired_from', 'aired_till', 'season', 'season_label', 'synopsis',
-                  'rating', 'character_count', 'episode_count', 'genres', 'studios', 'images', 'created_at',
-                  'updated_at']
+        fields = [
+            'id', 'mal_id', 'title', 'url', 'aired_from', 'aired_till', 'season', 'season_label', 'synopsis', 'rating',
+            'character_count', 'episode_count', 'genres', 'studios', 'images', 'created_at', 'updated_at'
+        ]
         extra_kwargs = {
             'mal_id': {'validators': []},
         }
