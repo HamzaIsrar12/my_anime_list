@@ -1,9 +1,7 @@
 from rest_framework import mixins, status, viewsets
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from core.constants import PAGINATION_PAGE_SIZE
 from engagement.models import CharacterLike, Review
 from engagement.permissions import ReviewPermission
 from engagement.serializers import CharacterLikeSerializer, ReviewSerializer, ReviewUpdateSerializer
@@ -13,8 +11,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [ReviewPermission]
-    pagination_class = PageNumberPagination
-    pagination_class.page_size = PAGINATION_PAGE_SIZE
 
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update']:
@@ -32,8 +28,6 @@ class CharacterLikeViewSet(
     permission_classes = [IsAuthenticated]
     queryset = CharacterLike.objects.select_related('character').order_by('pk')
     serializer_class = CharacterLikeSerializer
-    pagination_class = PageNumberPagination
-    pagination_class.page_size = PAGINATION_PAGE_SIZE
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)

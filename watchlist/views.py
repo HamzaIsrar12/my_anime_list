@@ -1,10 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, viewsets
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from core.constants import PAGINATION_PAGE_SIZE
 from watchlist.models import WatchList
 from watchlist.serializers import WatchListSerializer, WatchListUpdateSerializer
 
@@ -13,8 +11,6 @@ class WatchListViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = WatchList.objects.select_related('anime').order_by('anime__title')
     serializer_class = WatchListSerializer
-    pagination_class = PageNumberPagination
-    pagination_class.page_size = PAGINATION_PAGE_SIZE
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     filterset_fields = ['type']
     search_fields = ['anime__title']

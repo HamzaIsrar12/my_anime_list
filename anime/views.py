@@ -1,13 +1,11 @@
 from django.db.models import Count
 from rest_framework import filters, viewsets
 from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from anime.models import Anime, Character
 from anime.serializers import AnimeRetrieveSerializer, AnimeSerializer, CharacterSerializer, EpisodeSerializer
-from core.constants import PAGINATION_PAGE_SIZE
 from engagement.serializers import ReviewSerializer
 
 
@@ -17,8 +15,6 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'genres__name']
     ordering_fields = ['title']
-    pagination_class = PageNumberPagination
-    pagination_class.page_size = PAGINATION_PAGE_SIZE
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
@@ -71,8 +67,6 @@ class CharacterViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Character.objects.prefetch_related('images', 'liked_by', 'voice_actors').order_by('pk')
     serializer_class = CharacterSerializer
     permission_classes = [AllowAny]
-    pagination_class = PageNumberPagination
-    pagination_class.page_size = PAGINATION_PAGE_SIZE
     search_fields = ['name']
     filter_backends = [filters.SearchFilter]
 

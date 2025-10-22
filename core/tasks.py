@@ -9,9 +9,9 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def fetch_anime(start=1, end=20):
-    for i in range(start, end + 1):
+    for index in range(start, end + 1):
         chain(
-            process_and_store_anime.s(i),
+            process_and_store_anime.s(index),
             group(process_and_store_characters.s(), process_and_store_episodes.s()),
         ).delay()
 
