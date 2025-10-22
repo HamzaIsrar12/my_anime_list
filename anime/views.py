@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from anime.models import Anime, Character
-from anime.serializers import AnimeRetrieveSerializer, AnimeSerializer, CharacterSerializer, EpisodeSerializer
+from anime.serializers import AnimeSerializer, CharacterSerializer, EpisodeSerializer
 from engagement.serializers import ReviewSerializer
 
 
@@ -16,10 +16,10 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ['title', 'genres__name']
     ordering_fields = ['title']
 
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return AnimeRetrieveSerializer
-        return self.serializer_class
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['action'] = self.action
+        return context
 
     @action(detail=True, methods=['get'], url_path='episodes')
     def episodes(self, request, pk=None):
@@ -64,11 +64,13 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CharacterViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Character.objects.prefetch_related('images', 'liked_by', 'voice_actors').order_by('pk')
     serializer_class = CharacterSerializer
     permission_classes = [AllowAny]
     search_fields = ['name']
     filter_backends = [filters.SearchFilter]
+
+    def get_queryset(self):
+        return Character.objects.prefetch_related('images', 'liked_by', 'voice_actors').order_by('pk')
 
     @action(detail=False, methods=['get'], url_path='top')
     def top_characters(self, request):

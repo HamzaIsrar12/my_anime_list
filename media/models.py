@@ -4,7 +4,7 @@ from media.choices import ImageType
 
 
 class Image(models.Model):
-    type = models.IntegerField(choices=ImageType.choices, default=ImageType.JPG)
+    type = models.PositiveSmallIntegerField(choices=ImageType.choices, default=ImageType.JPG)
     image_url = models.URLField(blank=True, null=True)
     small_image_url = models.URLField(blank=True, null=True)
     large_image_url = models.URLField(blank=True, null=True)

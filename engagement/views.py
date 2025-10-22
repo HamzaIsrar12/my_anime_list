@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from engagement.models import CharacterLike, Review
 from engagement.permissions import ReviewPermission
-from engagement.serializers import CharacterLikeSerializer, ReviewSerializer, ReviewUpdateSerializer
+from engagement.serializers import CharacterLikeSerializer, ReviewSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -12,11 +12,10 @@ class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [ReviewPermission]
 
-    def get_serializer_class(self):
-        if self.action in ['update', 'partial_update']:
-            return ReviewUpdateSerializer
-
-        return super().get_serializer_class()
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['action'] = self.action
+        return context
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

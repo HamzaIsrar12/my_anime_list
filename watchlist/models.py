@@ -11,7 +11,7 @@ User = get_user_model()
 class WatchList(BaseModel):
     user = models.ForeignKey(User, related_name='watchlist_entries', on_delete=models.CASCADE)
     anime = models.ForeignKey(Anime, related_name='watchlist_entries', on_delete=models.CASCADE)
-    type = models.IntegerField(choices=ListType.choices, default=ListType.WATCH_LATER)
+    type = models.PositiveSmallIntegerField(choices=ListType.choices, default=ListType.WATCH_LATER)
 
     class Meta:
         constraints = [

@@ -15,11 +15,15 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ['id', 'anime_id', 'user_id', 'rating', 'message', 'created_at']
 
+    def get_fields(self):
+        fields = super().get_fields()
+        action = self.context.get('action', None)
 
-class ReviewUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = ['message', 'rating']
+        if action in ['update', 'partial_update']:
+            allowed_fields = ['message', 'rating']
+            fields = {key: value for key, value in fields.items() if key in allowed_fields}
+
+        return fields
 
 
 class CharacterLikeSerializer(serializers.ModelSerializer):

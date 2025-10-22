@@ -16,8 +16,12 @@ class WatchListSerializer(serializers.ModelSerializer):
         model = WatchList
         fields = ['id', 'type', 'type_label', 'anime_id', 'anime_title', 'created_at']
 
+    def get_fields(self):
+        fields = super().get_fields()
+        action = self.context.get('action', None)
 
-class WatchListUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = WatchList
-        fields = ['type']
+        if action in ['update', 'partial_update']:
+            allowed_fields = ['type', 'type_label', 'anime_title']
+            fields = {key: value for key, value in fields.items() if key in allowed_fields}
+
+        return fields
