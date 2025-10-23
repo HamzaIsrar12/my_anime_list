@@ -46,6 +46,7 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'drf_spectacular',
     'silk',
+    'django_celery_beat',
 ]
 
 MY_APPS = [
