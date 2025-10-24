@@ -1,1 +1,4 @@
 BASE_URL = 'https://api.jikan.moe/v4/anime'
+CACHED_PAGE_FETCH_LIMIT = 5
+LIVE_PAGE_FETCH_LIMIT = 10
+CACHE_TTL = 60 * 10
