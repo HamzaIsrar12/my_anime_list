@@ -186,3 +186,6 @@ CACHES = {
         "KEY_PREFIX": "myanimelist",
     }
 }
+
+SEARCH_PAGE_FETCH_LIMIT = 5
+CACHE_TTL = 60 * 10

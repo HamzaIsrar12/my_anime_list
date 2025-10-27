@@ -42,9 +42,9 @@ def process_and_update_anime():
 )
 def process_and_store_anime(anime_id: int):
     from core.serializers import AnimeExternalCreateSerializer
-    from core.utils import fetch_anime
+    from core.services import JikanService
 
-    payload, status = fetch_anime(anime_id)
+    payload, status = JikanService.get_anime_data(anime_id)
 
     if status == HTTPStatus.NOT_FOUND:
         raise Ignore()
@@ -72,10 +72,10 @@ def process_and_store_anime(anime_id: int):
 def process_and_store_characters(anime_id):
     from anime.models import Anime
     from core.serializers import CharacterExternalCreateSerializer
-    from core.utils import fetch_anime
+    from core.services import JikanService
 
     anime = Anime.objects.get(pk=anime_id)
-    payload, status = fetch_anime(f'{anime.mal_id}/characters/')
+    payload, status = JikanService.get_anime_characters_data(anime_id)
 
     if status == HTTPStatus.NOT_FOUND:
         raise Ignore()
@@ -101,10 +101,10 @@ def process_and_store_characters(anime_id):
 def process_and_store_episodes(anime_id):
     from anime.models import Anime
     from core.serializers import EpisodeExternalCreateSerializer
-    from core.utils import fetch_anime
+    from core.services import JikanService
 
     anime = Anime.objects.get(pk=anime_id)
-    payload, status = fetch_anime(f'{anime.mal_id}/episodes/')
+    payload, status = JikanService.get_anime_episodes_data(anime_id)
 
     if status == HTTPStatus.NOT_FOUND:
         raise Ignore()

@@ -8,19 +8,16 @@ from rest_framework.views import APIView
 
 from anime.models import Anime, Character
 from anime.serializers import AnimeSerializer, CharacterSerializer, EpisodeSerializer
-from anime.tasks import search_external_anime
+from anime.services import AnimeDataService
 from engagement.serializers import ReviewSerializer
 
 
 class AnimeSearchView(APIView, PageNumberPagination):
     def get(self, request):
         query = request.query_params.get('q')
-        page = request.query_params.get('page')
 
+        AnimeDataService.search_external_anime(query, timeout=4)
         anime = Anime.objects.filter(title__icontains=query).order_by('pk')
-
-        if page in ('1', None):
-            search_external_anime.delay(query)
 
         page = self.paginate_queryset(anime, request)
         if page is not None:

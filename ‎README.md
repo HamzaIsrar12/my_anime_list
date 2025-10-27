@@ -22,7 +22,7 @@ The management command enqueues **Celery** tasks that prefetch data from MyAnime
 2. Start Celery (single worker to respect third-party throttling)
 
 ```bash
-    celery -A myanimelist worker --concurrency=1 -l INFO
+    celery -A myanimelist worker --concurrency=1 -l info
 ```
 
 3. Run the fetch command
@@ -38,6 +38,13 @@ Browse interactive docs at:
 ```bash
     <base-url>/api/docs/
 ```
+
+## Celery Beat
+Run the periodic scheduler to update the database:
+```bash
+    celery -A myanimelist beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+```
+
 
 ## Project Layout
 
