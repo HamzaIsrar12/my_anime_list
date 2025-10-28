@@ -36,9 +36,9 @@ class ImageExternalCreateSerializer(serializers.ModelSerializer):
                     'image_url': urls.get('image_url', None),
                     'small_image_url': urls.get('small_image_url', None),
                     'large_image_url': urls.get('large_image_url', None),
+                    'content_object': related_model,
                 }
             )
-            related_model.images.add(image)
 
         return related_model
 
@@ -166,19 +166,27 @@ class CharacterExternalCreateSerializer(serializers.ModelSerializer):
         image_serializer.is_valid(raise_exception=True)
         image_serializer.save()
 
-        vs = VoiceActorExternalCreateSerializer(data=voice_actors_data, many=True, context={'character': character})
-        vs.is_valid()
-        vs.save()
+        voice_actor_serializer = VoiceActorExternalCreateSerializer(
+            data=voice_actors_data, many=True,
+            context={'character': character}
+        )
+        voice_actor_serializer.is_valid(raise_exception=True)
+        voice_actor_serializer.save()
 
         return character
 
 
 class VoiceActorExternalCreateSerializer(serializers.ModelSerializer):
-    voice_actors = serializers.DictField(write_only=True)
+    images = serializers.DictField(
+        child=serializers.DictField(),
+        write_only=True,
+        allow_empty=True,
+        required=False,
+    )
 
     class Meta:
         model = VoiceActor
-        fields = ['mal_id', 'url', 'name', 'language', 'voice_actors']
+        fields = ['mal_id', 'url', 'name', 'language', 'images']
         extra_kwargs = {
             'mal_id': {'validators': []},
         }

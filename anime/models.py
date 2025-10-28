@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 
 from anime.choices import Role, Season
@@ -34,7 +35,7 @@ class Anime(BaseModel):
     aired_till = models.DateField(blank=True, null=True)
     synopsis = models.TextField()
     season = models.PositiveSmallIntegerField(choices=Season.choices, blank=True, null=True)
-    images = models.ManyToManyField(Image, related_name='anime', blank=True)
+    images = GenericRelation(Image, related_query_name='anime', blank=True)
     studios = models.ManyToManyField('Studio', related_name='anime')
     genres = models.ManyToManyField('Genre', related_name='anime')
     rating = models.CharField(max_length=100)
@@ -58,7 +59,7 @@ class Episode(models.Model):
 class Character(models.Model):
     anime = models.ForeignKey(Anime, related_name='characters', on_delete=models.CASCADE)
     mal_id = models.PositiveIntegerField(unique=True)
-    images = models.ManyToManyField(Image, related_name='characters', blank=True)
+    images = GenericRelation(Image, related_query_name='character', blank=True)
     name = models.CharField(max_length=50)
     role = models.PositiveSmallIntegerField(choices=Role.choices, default=Role.MAIN)
     liked_by = models.ManyToManyField(
@@ -74,7 +75,7 @@ class VoiceActor(models.Model):
     mal_id = models.PositiveIntegerField(unique=True)
     name = models.CharField(max_length=100)
     url = models.URLField()
-    images = models.ManyToManyField(Image, related_name='voice_actors', blank=True)
+    images = GenericRelation(Image, related_query_name='voice_actor', blank=True)
     language = models.CharField(max_length=20)
 
     def __str__(self):
