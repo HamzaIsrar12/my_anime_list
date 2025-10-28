@@ -1,0 +1,6 @@
+/.venv/
+/.idea/
+/db.sqlite3
+/dump.rdb
+/.env
+/static/

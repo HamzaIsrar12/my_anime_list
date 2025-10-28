@@ -1,0 +1,1211 @@
+openapi: 3.0.3
+info:
+  title: My Anime List
+  version: 1.0.0
+  description: Welcome to MyAnimeList.
+paths:
+  /api/anime/:
+    get:
+      operationId: anime_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - anime
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAnimeList'
+          description: ''
+  /api/anime/{id}/:
+    get:
+      operationId: anime_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this anime.
+        required: true
+      tags:
+      - anime
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimeRetrieve'
+          description: ''
+  /api/anime/{id}/characters/:
+    get:
+      operationId: anime_characters_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this anime.
+        required: true
+      tags:
+      - anime
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Anime'
+          description: ''
+  /api/anime/{id}/episodes/:
+    get:
+      operationId: anime_episodes_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this anime.
+        required: true
+      tags:
+      - anime
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Anime'
+          description: ''
+  /api/anime/{id}/reviews/:
+    get:
+      operationId: anime_reviews_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this anime.
+        required: true
+      tags:
+      - anime
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Anime'
+          description: ''
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/auth/refresh/:
+    post:
+      operationId: auth_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/auth/register/:
+    post:
+      operationId: auth_register_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/characters/:
+    get:
+      operationId: characters_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - characters
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCharacterList'
+          description: ''
+  /api/characters/{id}/:
+    get:
+      operationId: characters_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this character.
+        required: true
+      tags:
+      - characters
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+          description: ''
+  /api/characters/top/:
+    get:
+      operationId: characters_top_retrieve
+      tags:
+      - characters
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+          description: ''
+  /api/likes/:
+    get:
+      operationId: likes_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - likes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCharacterLikeList'
+          description: ''
+    post:
+      operationId: likes_create
+      tags:
+      - likes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CharacterLike'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CharacterLike'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CharacterLike'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CharacterLike'
+          description: ''
+  /api/likes/{id}/:
+    delete:
+      operationId: likes_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this character like.
+        required: true
+      tags:
+      - likes
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/reviews/:
+    get:
+      operationId: reviews_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - reviews
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReviewList'
+          description: ''
+    post:
+      operationId: reviews_create
+      tags:
+      - reviews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Review'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Review'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+          description: ''
+  /api/reviews/{id}/:
+    get:
+      operationId: reviews_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this review.
+        required: true
+      tags:
+      - reviews
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+          description: ''
+    put:
+      operationId: reviews_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this review.
+        required: true
+      tags:
+      - reviews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewUpdate'
+          description: ''
+    patch:
+      operationId: reviews_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this review.
+        required: true
+      tags:
+      - reviews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewUpdate'
+          description: ''
+    delete:
+      operationId: reviews_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this review.
+        required: true
+      tags:
+      - reviews
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/watchlist/:
+    get:
+      operationId: watchlist_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: type
+        schema:
+          type: string
+          enum:
+          - watch_later
+          - watched
+          - watching
+        description: |-
+          * `watch_later` - Watch Later
+          * `watching` - Watching
+          * `watched` - Watched
+      tags:
+      - watchlist
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWatchListList'
+          description: ''
+    post:
+      operationId: watchlist_create
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchList'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WatchList'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WatchList'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchList'
+          description: ''
+  /api/watchlist/{id}/:
+    get:
+      operationId: watchlist_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this watch list.
+        required: true
+      tags:
+      - watchlist
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchList'
+          description: ''
+    put:
+      operationId: watchlist_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this watch list.
+        required: true
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchListUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WatchListUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WatchListUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchListUpdate'
+          description: ''
+    patch:
+      operationId: watchlist_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this watch list.
+        required: true
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWatchListUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWatchListUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWatchListUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchListUpdate'
+          description: ''
+    delete:
+      operationId: watchlist_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this watch list.
+        required: true
+      tags:
+      - watchlist
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Anime:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        mal_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        title:
+          type: string
+          maxLength: 100
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        aired_from:
+          type: string
+          format: date
+          nullable: true
+        aired_till:
+          type: string
+          format: date
+          nullable: true
+        season:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/SeasonEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        synopsis:
+          type: string
+        rating:
+          type: string
+          maxLength: 100
+      required:
+      - id
+      - mal_id
+      - rating
+      - synopsis
+      - title
+      - url
+    AnimeRetrieve:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        mal_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        title:
+          type: string
+          maxLength: 100
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        aired_from:
+          type: string
+          format: date
+          nullable: true
+        aired_till:
+          type: string
+          format: date
+          nullable: true
+        season:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/SeasonEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        synopsis:
+          type: string
+        rating:
+          type: string
+          maxLength: 100
+        character_count:
+          type: integer
+          readOnly: true
+        episode_count:
+          type: integer
+          readOnly: true
+        genres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+          readOnly: true
+        studios:
+          type: array
+          items:
+            $ref: '#/components/schemas/Studio'
+          readOnly: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+          readOnly: true
+      required:
+      - character_count
+      - episode_count
+      - genres
+      - id
+      - images
+      - mal_id
+      - rating
+      - studios
+      - synopsis
+      - title
+      - url
+    BlankEnum:
+      enum:
+      - ''
+    Character:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        mal_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        name:
+          type: string
+          maxLength: 50
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+          readOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        likes:
+          type: integer
+          readOnly: true
+        voice_actors:
+          type: array
+          items:
+            $ref: '#/components/schemas/VoiceActor'
+          readOnly: true
+      required:
+      - id
+      - images
+      - likes
+      - mal_id
+      - name
+      - voice_actors
+    CharacterLike:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        character_id:
+          type: integer
+          writeOnly: true
+        character:
+          allOf:
+          - $ref: '#/components/schemas/CharacterMini'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - character
+      - character_id
+      - created_at
+      - id
+    CharacterMini:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+      required:
+      - id
+      - name
+    Genre:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        mal_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        name:
+          type: string
+          maxLength: 20
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+      required:
+      - id
+      - mal_id
+      - name
+      - url
+    Image:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ImageTypeEnum'
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        small_image_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        large_image_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+    ImageTypeEnum:
+      enum:
+      - jpg
+      - webp
+      type: string
+      description: |-
+        * `jpg` - Jpg
+        * `webp` - Webp
+    NullEnum:
+      enum:
+      - null
+    PaginatedAnimeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Anime'
+    PaginatedCharacterLikeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CharacterLike'
+    PaginatedCharacterList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Character'
+    PaginatedReviewList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+    PaginatedWatchListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WatchList'
+    PatchedReviewUpdate:
+      type: object
+      properties:
+        message:
+          type: string
+        rating:
+          type: integer
+          maximum: 10
+          minimum: 1
+    PatchedWatchListUpdate:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/Type203Enum'
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        anime_id:
+          type: integer
+        user_id:
+          type: integer
+        rating:
+          type: integer
+          maximum: 10
+          minimum: 1
+        message:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - anime_id
+      - created_at
+      - id
+      - user_id
+    ReviewUpdate:
+      type: object
+      properties:
+        message:
+          type: string
+        rating:
+          type: integer
+          maximum: 10
+          minimum: 1
+    RoleEnum:
+      enum:
+      - Main
+      - Supporting
+      type: string
+      description: |-
+        * `Main` - Main
+        * `Supporting` - Supporting
+    SeasonEnum:
+      enum:
+      - spring
+      - summer
+      - fall
+      - winter
+      type: string
+      description: |-
+        * `spring` - Spring
+        * `summer` - Summer
+        * `fall` - Fall
+        * `winter` - Winter
+    Studio:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        mal_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        name:
+          type: string
+          maxLength: 100
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+      required:
+      - id
+      - mal_id
+      - name
+      - url
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    Type203Enum:
+      enum:
+      - watch_later
+      - watching
+      - watched
+      type: string
+      description: |-
+        * `watch_later` - Watch Later
+        * `watching` - Watching
+        * `watched` - Watched
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+      required:
+      - password
+      - username
+    VoiceActor:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        language:
+          type: string
+          maxLength: 20
+      required:
+      - id
+      - language
+      - name
+    WatchList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/Type203Enum'
+        anime_id:
+          type: integer
+          writeOnly: true
+        anime_title:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - anime_id
+      - anime_title
+      - created_at
+      - id
+      - type
+    WatchListUpdate:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/Type203Enum'
+      required:
+      - type
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
