@@ -7,7 +7,7 @@ from media.serializers import ImageSerializer
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = ['id', 'mal_id', 'name', 'url']
+        fields = ['id', 'mal_id', 'name']
         extra_kwargs = {
             'mal_id': {'validators': []},
         }
@@ -16,7 +16,7 @@ class GenreSerializer(serializers.ModelSerializer):
 class StudioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Studio
-        fields = ['id', 'mal_id', 'name', 'url']
+        fields = ['id', 'mal_id', 'name']
         extra_kwargs = {
             'mal_id': {'validators': []},
         }
@@ -29,6 +29,7 @@ class AnimeSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
     episode_count = serializers.SerializerMethodField()
     character_count = serializers.SerializerMethodField()
+    url = serializers.HyperlinkedIdentityField(view_name='anime-detail', lookup_field='slug')
 
     class Meta:
         model = Anime
@@ -80,10 +81,11 @@ class CharacterSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
     likes = serializers.SerializerMethodField()
     voice_actors = VoiceActorSerializer(many=True, read_only=True)
+    url = serializers.HyperlinkedIdentityField(view_name='characters-detail', lookup_field='slug')
 
     class Meta:
         model = Character
-        fields = ['id', 'mal_id', 'name', 'images', 'role', 'role_label', 'likes', 'voice_actors']
+        fields = ['id', 'mal_id', 'name', 'url', 'images', 'role', 'role_label', 'likes', 'voice_actors']
         extra_kwargs = {
             'mal_id': {'validators': []},
         }

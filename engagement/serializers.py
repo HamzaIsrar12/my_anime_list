@@ -10,10 +10,11 @@ User = get_user_model()
 class ReviewSerializer(serializers.ModelSerializer):
     anime_id = serializers.PrimaryKeyRelatedField(queryset=Anime.objects.all(), source='anime')
     user_id = serializers.PrimaryKeyRelatedField(source='user', read_only=True)
+    url = serializers.HyperlinkedIdentityField(view_name='reviews-detail')
 
     class Meta:
         model = Review
-        fields = ['id', 'anime_id', 'user_id', 'rating', 'message', 'created_at']
+        fields = ['id', 'anime_id', 'user_id', 'rating', 'message', 'url', 'created_at']
 
     def get_fields(self):
         fields = super().get_fields()

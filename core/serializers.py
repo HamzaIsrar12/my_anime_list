@@ -58,7 +58,7 @@ class AnimeExternalCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Anime
         fields = [
-            'mal_id', 'url', 'title', 'aired_from', 'aired_till', 'rating', 'synopsis', 'season', 'images', 'studios',
+            'mal_id', 'title', 'aired_from', 'aired_till', 'rating', 'synopsis', 'season', 'images', 'studios',
             'genres', 'aired'
         ]
         extra_kwargs = {
@@ -186,7 +186,7 @@ class VoiceActorExternalCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VoiceActor
-        fields = ['mal_id', 'url', 'name', 'language', 'images']
+        fields = ['mal_id', 'name', 'language', 'images']
         extra_kwargs = {
             'mal_id': {'validators': []},
         }
@@ -197,7 +197,6 @@ class VoiceActorExternalCreateSerializer(serializers.ModelSerializer):
             'mal_id': person.get('mal_id'),
             'name': person.get('name'),
             'images': person.get('images') or {},
-            'url': person.get('url'),
             'language': data.get('language'),
         }
         return super().to_internal_value(flat)
@@ -210,7 +209,6 @@ class VoiceActorExternalCreateSerializer(serializers.ModelSerializer):
             mal_id=validated_data.get('mal_id'),
             defaults={
                 'name': validated_data.get('name'),
-                'url': validated_data.get('url'),
                 'language': validated_data.get('language'),
                 'character': character,
             }

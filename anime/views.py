@@ -10,11 +10,12 @@ from engagement.serializers import ReviewSerializer
 
 
 class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Anime.objects.prefetch_related('genres').order_by('pk')
+    queryset = Anime.objects.order_by('pk')
     serializer_class = AnimeSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'genres__name']
     ordering_fields = ['title']
+    lookup_field = 'slug'
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -22,7 +23,7 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
         return context
 
     @action(detail=True, methods=['get'], url_path='episodes')
-    def episodes(self, request, pk=None):
+    def episodes(self, request, slug=None):
         episodes = self.get_object().episodes.order_by('pk')
 
         page = self.paginate_queryset(episodes)
@@ -34,32 +35,32 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'], url_path='characters')
-    def characters(self, request, pk=None):
+    def characters(self, request, slug=None):
         characters = (
             Character.objects
-            .filter(anime__id=pk)
+            .filter(anime__slug=slug)
             .prefetch_related('voice_actors', 'images', 'liked_by')
             .order_by('pk')
         )
 
         page = self.paginate_queryset(characters)
         if page is not None:
-            serializer = CharacterSerializer(page, many=True)
+            serializer = CharacterSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
 
-        serializer = CharacterSerializer(characters, many=True)
+        serializer = CharacterSerializer(characters, many=True, context={'request': request})
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'], url_path='reviews')
-    def reviews(self, request, pk=None):
+    def reviews(self, request, slug=None):
         reviews = self.get_object().reviews.order_by('-created_at')
 
         page = self.paginate_queryset(reviews)
         if page is not None:
-            serializer = ReviewSerializer(page, many=True)
+            serializer = ReviewSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
 
-        serializer = ReviewSerializer(reviews, many=True)
+        serializer = ReviewSerializer(reviews, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -68,6 +69,7 @@ class CharacterViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     search_fields = ['name']
     filter_backends = [filters.SearchFilter]
+    lookup_field = 'slug'
 
     def get_queryset(self):
         return Character.objects.prefetch_related('images', 'liked_by', 'voice_actors').order_by('pk')
