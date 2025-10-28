@@ -1,12 +1,31 @@
 from django.db.models import Count
 from rest_framework import filters, viewsets
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from anime.models import Anime, Character
 from anime.serializers import AnimeSerializer, CharacterSerializer, EpisodeSerializer
+from anime.services import AnimeDataService
 from engagement.serializers import ReviewSerializer
+
+
+class AnimeSearchView(APIView, PageNumberPagination):
+    def get(self, request):
+        query = request.query_params.get('q')
+
+        AnimeDataService.search_external_anime(query, timeout=4)
+        anime = Anime.objects.filter(title__icontains=query).order_by('pk')
+
+        page = self.paginate_queryset(anime, request)
+        if page is not None:
+            serializer = AnimeSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = AnimeSerializer(anime, many=True)
+        return Response(serializer.data)
 
 
 class AnimeViewSet(viewsets.ReadOnlyModelViewSet):

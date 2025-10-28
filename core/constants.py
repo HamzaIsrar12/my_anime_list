@@ -1,1 +1,1 @@
-BASE_URL = 'https://api.jikan.moe/v4/anime'
+JIKAN_API_BASE_URL = 'https://api.jikan.moe/v4/anime'

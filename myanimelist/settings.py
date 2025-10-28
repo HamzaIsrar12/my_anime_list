@@ -46,6 +46,7 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'drf_spectacular',
     'silk',
+    'django_celery_beat',
 ]
 
 MY_APPS = [
@@ -177,3 +178,14 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv('REDIS_LOCATION_URL', 'redis://127.0.0.1:6379/2'),
+        "KEY_PREFIX": "myanimelist",
+    }
+}
+
+SEARCH_PAGE_FETCH_LIMIT = 5
+CACHE_TTL = 60 * 10

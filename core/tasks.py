@@ -1,3 +1,4 @@
+import random
 from http import HTTPStatus
 
 from celery import chain, group, shared_task
@@ -17,6 +18,22 @@ def fetch_anime(start=1, end=20):
 
 
 @shared_task(
+    max_retries=1,
+    autoretry_for=(TimeoutError,),
+    retry_jitter=True,
+    retry_backoff=True,
+    rate_limit='20/m',
+)
+def process_and_update_anime():
+    mal_ids = random.sample(range(0, 20000), 100)
+    for mal_id in mal_ids:
+        chain(
+            process_and_store_anime.s(mal_id),
+            group(process_and_store_characters.s(), process_and_store_episodes.s()),
+        ).delay()
+
+
+@shared_task(
     max_retries=6,
     autoretry_for=(TimeoutError,),
     retry_jitter=True,
@@ -25,9 +42,9 @@ def fetch_anime(start=1, end=20):
 )
 def process_and_store_anime(anime_id: int):
     from core.serializers import AnimeExternalCreateSerializer
-    from core.utils import fetch_anime
+    from core.services import JikanService
 
-    payload, status = fetch_anime(anime_id)
+    payload, status = JikanService.get_anime_data(anime_id)
 
     if status == HTTPStatus.NOT_FOUND:
         raise Ignore()
@@ -55,10 +72,10 @@ def process_and_store_anime(anime_id: int):
 def process_and_store_characters(anime_id):
     from anime.models import Anime
     from core.serializers import CharacterExternalCreateSerializer
-    from core.utils import fetch_anime
+    from core.services import JikanService
 
     anime = Anime.objects.get(pk=anime_id)
-    payload, status = fetch_anime(f'{anime.mal_id}/characters/')
+    payload, status = JikanService.get_anime_characters_data(anime_id)
 
     if status == HTTPStatus.NOT_FOUND:
         raise Ignore()
@@ -84,10 +101,10 @@ def process_and_store_characters(anime_id):
 def process_and_store_episodes(anime_id):
     from anime.models import Anime
     from core.serializers import EpisodeExternalCreateSerializer
-    from core.utils import fetch_anime
+    from core.services import JikanService
 
     anime = Anime.objects.get(pk=anime_id)
-    payload, status = fetch_anime(f'{anime.mal_id}/episodes/')
+    payload, status = JikanService.get_anime_episodes_data(anime_id)
 
     if status == HTTPStatus.NOT_FOUND:
         raise Ignore()
